@@ -12,7 +12,7 @@ n = [1 2 3];
 beta = 3.0;
 
 %noise
-sd = 0.01;
+sd = 0.2;
 mean = 0;
 
 %qualizer
@@ -43,10 +43,32 @@ for i = 1:length(d)
 end
 
 %% plots
-offset = 0;
+% plot d
+close all;
+offset = 0; % for eye diagram
+t = 0:(L-1);
 figure
-eyeplot(d,offset);
-title('Eye Diagram of RZ Waveform')
+eyeplot(d);
+title('Eye Diagram of Original Waveform')
+figure
+stem(t,d,"filled")
+title("Sample Series of Original Waveform")
+ylabel('Amplitude')
+xlabel('Samples [n]')
+
+%% plots
+% plot u
+close all;
+offset = 0; % for eye diagram
+t = 0:(L-1);
+figure
+eyeplot(u);
+title('Eye Diagram of Corrupted Waveform')
+figure
+stem(t,u,"filled")
+title("Sample Series of Corrupted Waveform")
+ylabel('Amplitude')
+xlabel('Samples [n]')
 
 
 
@@ -65,15 +87,32 @@ end
         % Npeye: eye width in units of T
         % NSampT: samples per symbol
         % Toffset:symbol offset
-        function eyesuccess=eyeplot(onedsignal,Toffset)
-            Npeye = 3; 
-            NsampT = 1;
-            Noff=floor(Toffset*NsampT);
+        % function eyesuccess=eyeplot(onedsignal,Toffset)
+        %     Npeye = 3; 
+        %     NsampT = 1;
+        %     Noff=floor(Toffset*NsampT);
+        %     x_samples = [-1 0 1]; 
+        %     Lperiod=floor((length(onedsignal)-Noff)/(Npeye*NsampT));
+        %     Lrange=Noff+1:Noff+Lperiod*Npeye*NsampT;
+        %     mdsignal=reshape(onedsignal(Lrange),[Npeye*NsampT Lperiod]);
+        %     plot(x_samples,mdsignal,'k')
+        %     y_max = max(onedsignal);
+        %     y_min = min(onedsignal);
+        %     axis([-1.05 1.05 y_min-.05 y_max+.05])% hadcoded x lims 
+        % 
+        %     xlabel('Sample [n]')
+        %     ylabel('Magnitude [V]')
+        %     eyesuccess=1;
+        %     return
+        % end
+        function eyesuccess=eyeplot(onedsignal)
+            shift = 3;
             x_samples = [-1 0 1]; 
-            Lperiod=floor((length(onedsignal)-Noff)/(Npeye*NsampT));
-            Lrange=Noff+1:Noff+Lperiod*Npeye*NsampT;
-            mdsignal=reshape(onedsignal(Lrange),[Npeye*NsampT Lperiod]);
-            plot(x_samples,mdsignal,'k')
+            eye_array = zeros(length(onedsignal)-shift+1,shift);
+            for i = 1:(length(onedsignal)-shift+1)
+                eye_array(i,:) = onedsignal(i:(i+shift-1));
+            end
+            plot(x_samples,eye_array,'k')
             y_max = max(onedsignal);
             y_min = min(onedsignal);
             axis([-1.05 1.05 y_min-.05 y_max+.05])% hadcoded x lims 
