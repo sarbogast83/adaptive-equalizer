@@ -12,7 +12,7 @@ n = [1 2 3];
 beta = 3.0;
 
 %noise
-sd = 0.2;
+sd = 0.01;
 mean = 0;
 
 %qualizer
@@ -70,8 +70,28 @@ title("Sample Series of Corrupted Waveform")
 ylabel('Amplitude')
 xlabel('Samples [n]')
 
+%% plots
+% error
+figure
+plot(t,e_vec,LineWidth=1.5)
+title('Error')
+xlabel('Samples [n]')
+ylabel('Magnitude')
 
+%% plots
+%recovered
+tolerance = 0.1;
+conv_val = find_conv_sample(e_vec,tolerance);
+recov_sig = d_hat(conv_val:end);
 
+figure
+eyeplot(recov_sig);
+title('Eye Diagram of Covereged Waveform')
+figure
+stem(t,d_hat,"filled")
+title("Sample Series of d hat Waveform")
+ylabel('Amplitude')
+xlabel('Samples [n]')
 
 %% functions
 function hn = channel_impulse(n,b)
@@ -81,44 +101,28 @@ function hn = channel_impulse(n,b)
     end
 end
 
-% eye diagram 
-    % adapted form Lathi for 1 sps sigs
-        % onedsignal: one dimentional time signal
-        % Npeye: eye width in units of T
-        % NSampT: samples per symbol
-        % Toffset:symbol offset
-        % function eyesuccess=eyeplot(onedsignal,Toffset)
-        %     Npeye = 3; 
-        %     NsampT = 1;
-        %     Noff=floor(Toffset*NsampT);
-        %     x_samples = [-1 0 1]; 
-        %     Lperiod=floor((length(onedsignal)-Noff)/(Npeye*NsampT));
-        %     Lrange=Noff+1:Noff+Lperiod*Npeye*NsampT;
-        %     mdsignal=reshape(onedsignal(Lrange),[Npeye*NsampT Lperiod]);
-        %     plot(x_samples,mdsignal,'k')
-        %     y_max = max(onedsignal);
-        %     y_min = min(onedsignal);
-        %     axis([-1.05 1.05 y_min-.05 y_max+.05])% hadcoded x lims 
-        % 
-        %     xlabel('Sample [n]')
-        %     ylabel('Magnitude [V]')
-        %     eyesuccess=1;
-        %     return
-        % end
-        function eyesuccess=eyeplot(onedsignal)
-            shift = 3;
-            x_samples = [-1 0 1]; 
-            eye_array = zeros(length(onedsignal)-shift+1,shift);
-            for i = 1:(length(onedsignal)-shift+1)
-                eye_array(i,:) = onedsignal(i:(i+shift-1));
-            end
-            plot(x_samples,eye_array,'k')
-            y_max = max(onedsignal);
-            y_min = min(onedsignal);
-            axis([-1.05 1.05 y_min-.05 y_max+.05])% hadcoded x lims 
-           
-            xlabel('Sample [n]')
-            ylabel('Magnitude [V]')
-            eyesuccess=1;
-            return
-        end
+% eye diagram
+function eyesuccess=eyeplot(onedsignal)
+    shift = 3;
+    x_samples = [-1 0 1]; 
+    eye_array = zeros(length(onedsignal)-shift+1,shift);
+    for i = 1:(length(onedsignal)-shift+1)
+        eye_array(i,:) = onedsignal(i:(i+shift-1));
+    end
+    plot(x_samples,eye_array,'k')
+    y_max = max(onedsignal);
+    y_min = min(onedsignal);
+    axis([-1.05 1.05 y_min-.05 y_max+.05])% hadcoded x lims 
+   
+    xlabel('Sample [n]')
+    ylabel('Magnitude [V]')
+    eyesuccess=1;
+end
+
+% convergance
+function sample_num = find_conv_sample(conv_vec,tolerance)
+    last_val = conv_vec(end);
+    diff_array = abs(conv_vec-last_val);
+    not_conv = find(diff_array>tolerance);
+    sample_num = not_conv(end)+1;
+end
