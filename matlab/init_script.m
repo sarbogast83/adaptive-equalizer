@@ -41,14 +41,45 @@ for i = 1:length(d)
 
     w_vec = w_vec + mu*u_vec*e_vec(i);
 end
-hold on
-plot(e_vec)
+
+%% plots
+offset = 0;
+figure
+eyeplot(d,offset);
+title('Eye Diagram of RZ Waveform')
 
 
-% functions
+
+
+%% functions
 function hn = channel_impulse(n,b)
     hn = zeros(1,length(n));
     for i = 1:length(n)
         hn(i) = 0.5*(1+cos((2*pi*(n(i)-length(n)+1)/b)));
     end
 end
+
+% eye diagram 
+    % adapted form Lathi for 1 sps sigs
+        % onedsignal: one dimentional time signal
+        % Npeye: eye width in units of T
+        % NSampT: samples per symbol
+        % Toffset:symbol offset
+        function eyesuccess=eyeplot(onedsignal,Toffset)
+            Npeye = 3; 
+            NsampT = 1;
+            Noff=floor(Toffset*NsampT);
+            x_samples = [-1 0 1]; 
+            Lperiod=floor((length(onedsignal)-Noff)/(Npeye*NsampT));
+            Lrange=Noff+1:Noff+Lperiod*Npeye*NsampT;
+            mdsignal=reshape(onedsignal(Lrange),[Npeye*NsampT Lperiod]);
+            plot(x_samples,mdsignal,'k')
+            y_max = max(onedsignal);
+            y_min = min(onedsignal);
+            axis([-1.05 1.05 y_min-.05 y_max+.05])% hadcoded x lims 
+           
+            xlabel('Sample [n]')
+            ylabel('Magnitude [V]')
+            eyesuccess=1;
+            return
+        end
