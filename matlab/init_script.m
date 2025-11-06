@@ -18,6 +18,7 @@ mean = 0;
 %qualizer
 mu = 0.03; 
 taps = 12;
+delay = 6;
 
 %% run system
 d = 2*randi([0,1],1,L)-1; % traingin sequence {-1,1}
@@ -37,7 +38,7 @@ for i = 1:length(d)
     d_vec = [d(i) d_vec(1:end-1)];
     u_vec = [u(i) u_vec(1:end-1)];
     d_hat(i) = sum(w_vec.*u_vec);
-    e_vec(i) = d_vec(6)-d_hat(i);
+    e_vec(i) = d_vec(delay)-d_hat(i);
 
     w_vec = w_vec + mu*u_vec*e_vec(i);
 end
@@ -45,7 +46,6 @@ end
 %% plots
 % plot d
 close all;
-offset = 0; % for eye diagram
 t = 0:(L-1);
 figure
 eyeplot(d);
@@ -58,7 +58,6 @@ xlabel('Samples [n]')
 
 %% plots
 % plot u
-close all;
 offset = 0; % for eye diagram
 t = 0:(L-1);
 figure
@@ -82,16 +81,22 @@ ylabel('Magnitude')
 %recovered
 tolerance = 0.1;
 conv_val = find_conv_sample(e_vec,tolerance);
-recov_sig = d_hat(conv_val:end);
+conv_sig = d_hat(conv_val:end);
 
 figure
-eyeplot(recov_sig);
+eyeplot(conv_sig);
 title('Eye Diagram of Covereged Waveform')
 figure
 stem(t,d_hat,"filled")
 title("Sample Series of d hat Waveform")
 ylabel('Amplitude')
 xlabel('Samples [n]')
+
+%% final metrics
+SNR_Rx = snr_db(d,u)
+SNR_Eq = snr_db(d(conv_val:end-delay+1),d_hat(conv_val+delay-1:end))
+disp("coef"); w_vec'
+
 
 %% functions
 function hn = channel_impulse(n,b)
@@ -104,7 +109,7 @@ end
 % eye diagram
 function eyesuccess=eyeplot(onedsignal)
     shift = 3;
-    x_samples = [-1 0 1]; 
+    x_samples = [-0.5 0 0.5]; 
     eye_array = zeros(length(onedsignal)-shift+1,shift);
     for i = 1:(length(onedsignal)-shift+1)
         eye_array(i,:) = onedsignal(i:(i+shift-1));
@@ -112,7 +117,7 @@ function eyesuccess=eyeplot(onedsignal)
     plot(x_samples,eye_array,'k')
     y_max = max(onedsignal);
     y_min = min(onedsignal);
-    axis([-1.05 1.05 y_min-.05 y_max+.05])% hadcoded x lims 
+    axis([-.55 .55 y_min-.05 y_max+.05])% hadcoded x lims 
    
     xlabel('Sample [n]')
     ylabel('Magnitude [V]')
@@ -125,4 +130,12 @@ function sample_num = find_conv_sample(conv_vec,tolerance)
     diff_array = abs(conv_vec-last_val);
     not_conv = find(diff_array>tolerance);
     sample_num = not_conv(end)+1;
+end
+
+% compute snr between Tx and Rx
+function snr_db = snr_db(tx, rx)
+    sig_power = sum(abs(tx).^2);
+    noise_power = sum(abs((tx-rx)).^2);
+    snr = sig_power/noise_power;
+    snr_db = 10*log10(snr);
 end
