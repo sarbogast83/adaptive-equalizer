@@ -5,7 +5,7 @@
 %% init
 
 L = 1012; %sequnce length
-rng(3); % seed randi
+seed = 3 ;% seed randi
 
 % channel
 n = [1 2 3];
@@ -21,6 +21,7 @@ taps = 12;
 delay = 6;
 
 %% run system
+rng(seed);
 d = 2*randi([0,1],1,L)-1; % traingin sequence {-1,1}
 h = channel_impulse(n,beta);
 v = sd .* rand(1,L) + mean; %gausse noise
@@ -96,6 +97,10 @@ xlabel('Samples [n]')
 SNR_Rx = snr_db(d,u)
 SNR_Eq = snr_db(d(conv_val:end-delay+1),d_hat(conv_val+delay-1:end))
 disp("coef"); w_vec'
+
+%% save
+save('floating_point_ref',"L", 'seed', 'n', 'beta',"sd","mean","mu", ...
+    "taps","delay","d","u","d_hat","e_vec","w_vec");
 
 
 %% functions
