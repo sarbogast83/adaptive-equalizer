@@ -1,79 +1,281 @@
 S Arbogast
 Adaptive Channel Equalizer
 
+***MATLAB Model
 
-MATLAB Script 1) float_point_model.m
-This script models a 12 tap adaptive channel fitler usign least squares method in floatign point values. 
+	MATLAB Script 1) float_point_model.m
+	This script models a 12 tap adaptive channel fitler usign least squares method in floatign point values. 
 
-Inputs: all variable are set in the 'init' section
-	parameter | type  | discription                 | default
-	L         | int   | length of training sequence | 1012
-	seed      | int   | seed for randi()            | 3
-	n         | array | length of channel model     | 3
-	beta      | float | channel bandwidth           | 3.0
-	sd        | float | standard deviation of noise | 0.01
-	mean      | float | mean of noise               | 0.0
-	mu        | float | filter convergence rate     | 0.07
-	taps      | int   | adaptive filter size        | 12
-	tolerance | float | convergence range           | 0.1
-	
-The remainder of the script with run the floating point model, plot nessasry data, and save a .mat file of inputs and results. 
-
-Outputs: 
-	- Time plot and eye diagram of d, training sequence 
-	- Time plot and eye diagram of u, corrupted sequence 
-	- Time plot of error vector
-	- Time plot of d hat
-	- Eye diagram of converged d hat values
-	- Impulse response of channel
-	- Frequency and phase of channel
-	- Impulse response of final fitler values w
-	- Frequency and phase of final filter values
-	
-	- Print to consol
-		- conv_val: esitmated convergence point of d hat
-		- SNR_RX: SNR of corrupted sequence u
-		- SNR_Eq: SNR of convereged values of d hat
-		- final values of adaptive filter coeffiecents
-	
-	- Save to floating_point_ref.mat
-		- Parmaters: l, seed, n, beta, sd, mean, mu, taps, 
-		- computations: delay, d, u, d_hat, e_vec, w_vec, SNR_Rx, SNR_Eq, conv_val
+	Inputs: all variable are set in the 'init' section
+		parameter | type  | discription                 | default
+		L         | int   | length of training sequence | 1012
+		seed      | int   | seed for randi()            | 3
+		n         | array | length of channel model     | 3
+		beta      | float | channel bandwidth           | 3.0
+		sd        | float | standard deviation of noise | 0.01
+		mean      | float | mean of noise               | 0.0
+		mu        | float | filter convergence rate     | 0.07
+		taps      | int   | adaptive filter size        | 12
+		tolerance | float | convergence range           | 0.1
 		
+	The remainder of the script with run the floating point model, plot nessasry data, and save a .mat file of inputs and results. 
+
+	Outputs: 
+		- Time plot and eye diagram of d, training sequence 
+		- Time plot and eye diagram of u, corrupted sequence 
+		- Time plot of error vector
+		- Time plot of d hat
+		- Eye diagram of converged d hat values
+		- Impulse response of channel
+		- Frequency and phase of channel
+		- Impulse response of final fitler values w
+		- Frequency and phase of final filter values
 		
-MATLAB Script 2) fixed_point_model.m
-This script models the 12 tap adaptive equalizer from floating_point_model.m in an integer based fixed point representation.  
-
-Inputs: all variable are set in the 'init' section. The model loads the saved file 'floatign_point_ref.mat' to bring in identical parameters, ensuring accurate comparison. 
-
-	parameter | type  | discription                                 | default
-	word_size | int   | bits per word                               | 16
-	M         | int   | bit shift of d hat computation 1/2^M = >> M | 14
-	N         | int   | bit shift of e_vec computaion 1/2^N = >> N  | 15
-	mu_bits   | int   | bit size equivlent of mu 1/2^(mu_bits)      | 4
-	
-The remiander of the script runs the fixed point model, generates results and plot, comparies the model to the floating point and saves resutls. 
-
-Outputs: 
-	- valid(): booling array of validation tests
-	- Time and eye diagram of integer d 
-	- Time and eye diagram of integer u
-	- Time plot of integer error vector e
-	- Time plot of integer d hat
-	- Eye diagram of converged values of d hat
-	- normalized comparison of float and fixed error vector
-	- normalized comparison of float and fixed d hat 
-	- normalized comparison of float and fixed w vector
-	- comparison of float and fixed w vector frequency response 
-	
-	-Print to consol
-		- conv_val: estimated convergance point of d hat 
-		- SNR_RX: SNR of corrupted sequence u
-		- SNR_Eq: SNR of convereged values of d hat
-		- final values of adaptive filter coeffiecents
+		- Print to consol
+			- conv_val: esitmated convergence point of d hat
+			- SNR_RX: SNR of corrupted sequence u
+			- SNR_Eq: SNR of convereged values of d hat
+			- final values of adaptive filter coeffiecents
 		
-	- Save to floating_point_ref.mat
-		- Parmaters: word_size, M, N, mu_bits 
-		- computations: d_int16, u_int16, d_hat_int16, w_vec_int16, SNR_Rx, SNR_Eq,
-				conv_val, error_w, error_evec, error_dhat
+		- Save to floating_point_ref.mat
+			- Parmaters: l, seed, n, beta, sd, mean, mu, taps, 
+			- computations: delay, d, u, d_hat, e_vec, w_vec, SNR_Rx, SNR_Eq, conv_val
+			
+			
+	Script 2) fixed_point_model.m
+	This script models the 12 tap adaptive equalizer from floating_point_model.m in an integer based fixed point representation.  
+
+	Inputs: all variable are set in the 'init' section. The model loads the saved file 'floatign_point_ref.mat' to bring in identical parameters, ensuring accurate comparison. 
+
+		parameter | type  | discription                                 | default
+		word_size | int   | bits per word                               | 16
+		M         | int   | bit shift of d hat computation 1/2^M = >> M | 14
+		N         | int   | bit shift of e_vec computaion 1/2^N = >> N  | 15
+		mu_bits   | int   | bit size equivlent of mu 1/2^(mu_bits)      | 4
+		
+	The remiander of the script runs the fixed point model, generates results and plot, comparies the model to the floating point and saves resutls. 
+
+	Outputs: 
+		- valid(): booling array of validation tests
+		- Time and eye diagram of integer d 
+		- Time and eye diagram of integer u
+		- Time plot of integer error vector e
+		- Time plot of integer d hat
+		- Eye diagram of converged values of d hat
+		- normalized comparison of float and fixed error vector
+		- normalized comparison of float and fixed d hat 
+		- normalized comparison of float and fixed w vector
+		- comparison of float and fixed w vector frequency response 
+		
+		-Print to consol
+			- conv_val: estimated convergance point of d hat 
+			- SNR_RX: SNR of corrupted sequence u
+			- SNR_Eq: SNR of convereged values of d hat
+			- final values of adaptive filter coeffiecents
+			
+		- Save to floating_point_ref.mat
+			- Parmaters: word_size, M, N, mu_bits 
+			- computations: d_int16, u_int16, d_hat_int16, w_vec_int16, SNR_Rx, SNR_Eq,
+					conv_val, error_w, error_evec, error_dhat
+
+*** SystemC Floating Point Model
+
+	The SystemC floating point model utlizes two MATLAB scripts in addition to the C++ souce code. 
+
+	MATLAB Script 1) float_point_model.m
+		The saved data of this model is used as input to sysc_float.m. 
+		
+		*** Run this script as stated above to create the floating_point_ref.mat file. ***
+		
+	MATLAB Script 2) sysc_float.mat
 	
+		This script will generate the txt files necessary for the SytemC floating point executable. The script will read in the SystemC output txt files and process error adn overlay plots for the error vector, d hat vector and w coeffiecents. 
+		
+		Input:
+			No direct imputs are needed in this script. 
+			*** Ensure floating_point_ref.mat is locally available to this script to be read in in the init section. ***
+
+			Section "read dhat, en, w" requires the txt files generated by the systemC model. 
+			*** Ensure these files are locally available to MATLAB ***
+				- dhatn.txt
+				- en.txt
+				- w.txt
+
+		
+		Outputs: 
+			Section "write dn, un" writes the txt files need by the SystemC executable. 
+				- dn.txt
+				- un.txt
+			
+			Sections "error" and "plot" process the SystemC outputs and generate comparisons to the MATLAB floating point model. 
+				- error_dhat: squared error of the MATLAB model d_hat and SystemC dhatn.txt
+				- error_evec: squared error of the MATLAB model error vector e_vec and SystemC en.txt
+				- error_w: squared error of the MATLAB model w_vec and SystemC w.txt
+
+				Plots:
+				- Overlay comparison of d_hat and dhatn.txt
+				- Overlay comparison of e_vec and en.txt
+				- Overlay comparison of w_vec adn w.txt
+				- Eye diagram of coverged values from dhatn.txt
+				
+				Print:
+				- First 10 samples of error vectors
+				- First 10 samples of d hat
+				- All of W coeffiecents
+				- SNR of convereged dhatn.txt and d
+	
+	SystemC
+		The SystemC floating point model realizes the adaptive filter at the RTL level using floating point values. It is expected that a correctly implemented model should mirror the MATLAB floating point model neglible errror. 
+		
+		Inputs:
+			The SystemC model requires two txt files, the trainign sequence 'd' and corrupted sequence 'u'. The txt fiels are written in colume form with the first value of the file listing the total number of samples. 
+			- dn.txt
+			- un.txt
+			
+		Output: 
+			The model writes three data sets to txt, the 'd hat' vector, 'e' vector, and final set of 'W' coeffiecents, sample 1012. 
+			- dhatn.txt
+			- en.txt
+			- w.txt
+
+			Print to terminal:
+				The executable prints the length of dn and un ensuring correct read ins
+				The model prints the first 'clock' period outputs
+					[ "dn: " << dn << "\tun: " << un << "\tdhat:" << dhatOut << "\ten: " << enOut ]
+				
+		Build:
+			The model build requires the instalation of the SystemC library. The supplied Makefile are set to build in a Linux enviroment using gcc. Update as needed for enviroment and correct path to the SystemC library. 
+			
+			source files:
+				- add.cc
+				- sub.cc
+				- dff.cc
+				- mult.cc
+				- driver.cc
+				- test_AEtop.cc
+				
+			header files:
+				- add.h
+				- sub.h 
+				- dff.h 
+				- mult.h 
+				- driver.h 
+				- AE_FIR_DF.h
+				- AE_top.h 
+				- CUcell.h 
+				- CUunit.h
+				- delayBlock.h 
+				- FIRcellDf.h 
+				
+			executable: 
+				- runAEtop.x 
+				
+			Make files: 
+				- Makefile
+				- Makefile.defs
+
+*** SystemC Fixed Point Model
+
+	The SystemC fixed point model utlizes three MATLAB scripts in addition to the C++ souce code. 
+
+	MATLAB Script 1) float_point_model.m
+		The saved data of this model is used as input to sysc_fixed.m. 
+		
+		*** Run this script as stated above to create the floating_point_ref.mat file. ***
+		
+	MATLAB Script 1) fixed_point_model.m
+		The saved data of this model is used as input to sysc_fixed.m. 
+		
+		*** Run this script as stated above to create the fixed_point_ref.mat file. ***	
+		
+	MATLAB Script 3) sysc_fixed.mat
+	
+		This script will generate the txt files necessary for the SytemC fixed point executable. The script will read in the SystemC output txt files, process error, and generate overlay plots for the error vector, d hat vector, w coeffiecents, and eye diagram. 
+		
+		Input:
+			No direct imputs are needed in this script. 
+			*** Ensure floating_point_ref.mat and fixec_point_ref.mat are locally available to this script to be read in in the init section. ***
+
+			Section "read dhat, en, w" requires the txt files generated by the systemC model. 
+			*** Ensure these files are locally available to MATLAB ***
+				- dhatn_int.txt
+				- en_int.txt
+				- w_int.txt
+
+		
+		Outputs: 
+			Section "write dn, un" writes the txt files need by the SystemC executable. 
+				- dn_int.txt
+				- un_int.txt
+			
+			Sections "error" and "plot" process the SystemC outputs and generate comparisons to the MATLAB fixed point model. 
+				- error_dhat: squared error of the MATLAB model d_hat and SystemC dhatn.txt
+				- error_evec: squared error of the MATLAB model error vector e_vec and SystemC en.txt
+				- error_w: squared error of the MATLAB model w_vec and SystemC w.txt
+
+				Plots:
+				- Overlay comparison of d_hat_int and dhatn_int.txt
+				- Overlay comparison of e_vec_int and en_int.txt
+				- Overlay comparison of w_vec_int adn w_int.txt
+				- Eye diagram of coverged values from dhatn_int.txt
+				
+				Print:
+				- First 10 samples of error vectors
+				- First 10 samples of d hat
+				- All of W coeffiecents
+				- SNR of convereged dhatn_int.txt and d
+	
+	SystemC
+		The SystemC fixed point model realizes the adaptive filter at the RTL level using fixed point values. It is expected that a correctly implemented model should mirror the MATLAB fixed point model with zero errror. 
+		
+		Inputs:
+			The SystemC model requires two txt files, the trainign sequence 'd' and corrupted sequence 'u'. The txt fiels are written in colume form with the first value of the file listing the total number of samples. 
+			- dn_int.txt
+			- un_int.txt
+			
+		Output: 
+			The model writes three data sets to txt, the 'd hat' vector, 'e' vector, and final set of 'W' coeffiecents, sample 1012. 
+			- dhatn_int.txt
+			- en_int.txt
+			- w_int.txt
+
+			Print to terminal:
+				The executable prints the length of dn and un ensuring correct read ins
+				The model prints the first 'clock' period outputs
+					[ cout << "dn: " << dn << "\tun: " << un << "\tdhat:" << dhatOut << "\ten: " << enOut <<  "\n"; ]
+				
+		Build:
+			The model build requires the instalation of the SystemC library. The supplied Makefile are set to build in a Linux enviroment using gcc. Update as needed for enviroment and correct path to the SystemC library. 
+			
+			source files:
+				- add16.cc
+				- add32.cc
+				- sub16.cc
+				- mult16.cc
+				- scdl.cc
+				- driver.cc
+				- test_AEtop.cc
+				
+			header files:
+				- add16.h
+				- add32.h
+				- sub16.h 
+				- dff_gen_int.h 
+				- mult16.h
+				- scdl.h				
+				- driver.h 
+				- AE_FIR_DF.h
+				- AE_top.h 
+				- CUcell.h 
+				- CUunit.h
+				- delayBlock.h 
+				- FIRcellDf.h 
+				
+			executable: 
+				- runAEtop.x 
+				
+			Make files: 
+				- Makefile
+				- Makefile.defs
+
+		
