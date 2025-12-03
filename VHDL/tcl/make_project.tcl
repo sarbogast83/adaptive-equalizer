@@ -10,6 +10,8 @@ add_files -fileset sources_1 -norecurse ./src/dff16.vhd
 add_files -fileset sources_1 -norecurse ./src/dff32.vhd
 add_files -fileset sources_1 -norecurse ./src/mult16.vhd
 add_files -fileset sources_1 -norecurse ./src/sub16.vhd
+add_files -fileset sources_1 -norecurse ./src/delayBlock.vhd
+add_files -fileset sources_1 -norecurse ./src/FIRcellDF.vhd
 
 
 # add_files -fileset sources_1 -norecurse ./src/
