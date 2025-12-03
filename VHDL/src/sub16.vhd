@@ -13,7 +13,7 @@ entity sub16 is
          subt: in signed(15 downto 0 );
          diff: out signed(15 downto 0 )
          );
-end add16;
+end sub16;
 
 architecture Behavioral of sub16 is
 
