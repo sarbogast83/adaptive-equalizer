@@ -8,10 +8,11 @@ use work.all;
 library STD;
 use std.textio.all;
 
-entity AE_topTestbench is			-- empty entity
+entity AE_topTestbench is
+-- empty entity			
 end AE_topTestbench;
 
-architecture testbench of AE_topTestbenchis
+architecture testbench of AE_topTestbench is
    
 
 signal clock    : std_logic := '0';
@@ -86,7 +87,7 @@ begin
     
     -- Instantiate Filter here
     DUT: AE_top port map( 
-		clk => clk, 
+		clk => clock, 
 		reset => reset, 
 		dn => dn, 
 		un => un,
@@ -131,29 +132,29 @@ begin
 	process(reset,clock)
 	begin
 		if reset = '1' then
-			clk_count <= (others = '0');
+			clk_count <= (others => '0');
 		else 
-			if (rising_edge(clk)) then
-			clk_count <= clk_count + 1;
+			if (rising_edge(clock)) then
+			    clk_count <= clk_count + 1;
+			end if;
 		end if;
 	end process;
 	
 	-- open file and write
-	process (clk_count, clk)
+	process (clk_count, clock)
 		file w_fp          : text open write_mode is "C:\vivado_DSP\adaptiveFIR\data\w_int.txt";
         variable v_OLINE   : line;
         variable w_data    : integer;
         variable k         : integer := 0;
 	begin
-		if(rising_edge(clk)) then 
-			if (clk_count == 1012) then
+		if(rising_edge(clock)) then 
+			if (clk_count = 1012) then
 				while(k < 12) loop
-					w_data := to_integer(signed(w(k)));
+					w_data := to_integer(signed(wn(k)));
 					write(v_OLINE, w_data);
 					writeline(w_fp, v_OLINE);
 					k := k+1;
 				end loop;
-				wait;
 			end if;
 		end if;
 	end process;
