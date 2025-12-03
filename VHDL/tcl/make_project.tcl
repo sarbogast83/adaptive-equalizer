@@ -3,19 +3,11 @@ create_project ${project_name} ./vivado -part xc7a100tcsg324-1 -force
 
 set proj_dir [get_property directory [current_project]]
 set obj [current_project]
- 
-add_files -fileset sources_1 -norecurse ./src/add16.vhd
-add_files -fileset sources_1 -norecurse ./src/add32.vhd
-add_files -fileset sources_1 -norecurse ./src/dff16.vhd
-add_files -fileset sources_1 -norecurse ./src/dff32.vhd
-add_files -fileset sources_1 -norecurse ./src/mult16.vhd
-add_files -fileset sources_1 -norecurse ./src/sub16.vhd
-add_files -fileset sources_1 -norecurse ./src/delayBlock.vhd
-add_files -fileset sources_1 -norecurse ./src/FIRcellDF.vhd
-add_files -fileset sources_1 -norecurse ./src/AE_FIR_DF.vhd
-add_files -fileset sources_1 -norecurse ./src/CUcell.vhd
-add_files -fileset sources_1 -norecurse ./src/CUcunit.vhd
 
+# add all files from src
+add_files -fileset sources_1 [glob ./src/*.vhd] 
+
+# add_files -fileset sim_1 ./src/AE_topTestbench.vhd
 
 # add_files -fileset sources_1 -norecurse ./src/
 
