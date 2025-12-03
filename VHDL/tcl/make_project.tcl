@@ -7,9 +7,7 @@ set obj [current_project]
 # add all files from src
 add_files -fileset sources_1 [glob ./src/*.vhd] 
 
-# add_files -fileset sim_1 ./src/AE_topTestbench.vhd
-
-# add_files -fileset sources_1 -norecurse ./src/
+add_files -fileset sim_1 ./sim/AE_topTestbench.vhd
 
 # setup IP repository path and a couple other project options 
 set_property target_language VHDL [current_project]
