@@ -29,11 +29,8 @@ end AE_FIR_DF;
 
 architecture rtl of AE_FIR_DF is
 
-    signal r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10 : signed(15 downto 0);
-    signal s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10 : signed(31 downto 0);
-	signal pass: signed(15 downto 0);
-    signal xq : signed(15 downto 0);
-    signal yd : signed(31 downto 0);
+    signal r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11 : signed(15 downto 0):= (others => '0');
+    signal s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10 : signed(31 downto 0):= (others => '0');
 	
 	component FIRcellDF is port (
 		reset   : in std_logic;
@@ -62,7 +59,6 @@ begin
 	FIRcellDF_U11: FIRcellDF port map (reset => reset, clk => clk, rk => r10, sk => s10, bk => b11, rkp1 => r11, skp1 => yn);
 	
 	-- pass cell output to out port
-	--pass <= xn;
 	u0 <= xn;
 	u1 <= r0;
 	u2 <= r1;

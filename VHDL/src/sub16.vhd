@@ -18,7 +18,7 @@ end sub16;
 architecture Behavioral of sub16 is
 
 begin
-    
-diff <= minu - subt;
+
+    diff <= minu - subt;
 
 end Behavioral;

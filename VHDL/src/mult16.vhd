@@ -18,6 +18,6 @@ architecture Behavioral of mult16 is
 
 begin
 
-c <= a * b;
+    c <= a * b;
 
 end Behavioral;

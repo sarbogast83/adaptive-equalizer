@@ -33,17 +33,17 @@ end component;
 
 begin 
 
-	U0_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u0, wnp1 => w0);
-	U1_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u1, wnp1 => w1);
-	U2_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u2, wnp1 => w2);
-	U3_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u3, wnp1 => w3);
-	U4_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u4, wnp1 => w4);
-	U5_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u5, wnp1 => w5);
-	U6_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u6, wnp1 => w6);
-	U7_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u7, wnp1 => w7);
-	U8_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u8, wnp1 => w8);
-	U9_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u9, wnp1 => w9);
-	U10_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u10, wnp1 => w10);
-	U11_CUcell = CUcell port map(clk => clk, reset => reset, en => en, un => u11, wnp1 => w11);
+	U0_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u0, wnp1 => w0);
+	U1_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u1, wnp1 => w1);
+	U2_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u2, wnp1 => w2);
+	U3_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u3, wnp1 => w3);
+	U4_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u4, wnp1 => w4);
+	U5_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u5, wnp1 => w5);
+	U6_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u6, wnp1 => w6);
+	U7_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u7, wnp1 => w7);
+	U8_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u8, wnp1 => w8);
+	U9_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u9, wnp1 => w9);
+	U10_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u10, wnp1 => w10);
+	U11_CUcell: CUcell port map(clk => clk, reset => reset, en => en, un => u11, wnp1 => w11);
 
 end Behavioral;

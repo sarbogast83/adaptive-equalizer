@@ -24,11 +24,11 @@ end CUcell;
 
 architecture Behavioral of CUcell is
 
-	signal ak, akp1, mk16: signed(15 downto 0);
-	signal mk32: signed(31 downto 0);
-	signal mu_N: unsigned(4 downto 0);
+	signal ak, akp1, mk16: signed(15 downto 0):= (others => '0');
+	signal mk32, shiftmk: signed(31 downto 0):= (others => '0');
+	--signal mu_N: unsigned(4 downto 0);
 
-	component dff is
+	component dff16 is
 	port(
 		reset : in std_logic ;
 		clk : in std_logic ;
@@ -51,10 +51,12 @@ architecture Behavioral of CUcell is
 
 begin
 
-	U0_mult = mult16 port map ( a => un, b => en, c => mk32);
-	mk16 <= mk32(15 downto 0) sra 20;
-	U_add = add32 port map ( a => mk16, b => akp1, c => ak);
-	U_dff = dff16 port map (reset => reset, clk => clk, d => ak, q => akp1);
-	wnp1 <= ak;
+	U0_mult: mult16 port map ( a => un, b => en, c => mk32);
+	shiftmk <= (shift_right(mk32, 20));
+	mk16 <= shiftmk(15 downto 0);
+--	mk16 <= resize(mk32(31 downto 20),16);
+	U_add: add16 port map ( a => mk16, b => akp1, c => ak);
+	U_dff: dff16 port map (reset => reset, clk => clk, d => ak, q => akp1);
+	wnp1 <= akp1;
 
 end Behavioral;

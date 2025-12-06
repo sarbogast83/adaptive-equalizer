@@ -17,12 +17,12 @@ architecture testbench of AE_topTestbench is
 
 signal clock    : std_logic := '0';
 signal reset    : std_logic := '1';
-signal dn, un   : signed(15 downto 0);
-signal dhatOut, enOut       : signed(15 downto 0);
+signal dn, un   : signed(15 downto 0):= (others => '0');
+signal dhatOut, enOut       : signed(15 downto 0):= (others => '0');
 --signal wn0, wn1, wn2, wn3, wn4, wn5, wn6, wn7, wn8, wn9, wn10, wn11: signed(15 downto 0);
-signal clk_count: unsigned(9 downto 0); -- 10 bit counter for clock
+signal clk_count: unsigned(9 downto 0);--:= (others => '0'); -- 10 bit counter for clock
 type array_type is array (0 to 11) of signed(15 downto 0);
-signal wn       : array_type;
+signal wn       : array_type:= (others => (others => '0'));
 
 component AE_top is 
 port( 
@@ -38,7 +38,8 @@ begin
     -- reset process
     process
 	begin
-		reset <= '1', '0' after 105 ns;
+	   wait for 105 ns;
+		reset <= '0';
 		wait;
 	end process;
 
@@ -62,11 +63,11 @@ begin
     begin
         if(reset = '1') then
             dn <= (others => '0');
-        elsif(rising_edge(clock)) then
-            readline(dn_fp, v_ILINE);
-            read(v_ILINE, dn_data);
-            dn <= to_signed(dn_data, 16);
-        end if;
+        elsif(rising_edge (clock)) then
+                readline(dn_fp, v_ILINE);
+                read(v_ILINE, dn_data);
+                dn <= to_signed(dn_data, 16);
+         end if;
     end process;
 	-- un
 	process(reset, clock)
@@ -77,12 +78,12 @@ begin
     
     begin
         if(reset = '1') then
-            un <= (others => '0');
-        elsif(rising_edge(clock)) then
-            readline(un_fp, v_ILINE);
-            read(v_ILINE, un_data);
-            un <= to_signed(un_data, 16);
-        end if;
+            un <= (others=>'0');
+        elsif(rising_edge (clock)) then
+                readline(un_fp, v_ILINE);
+                read(v_ILINE, un_data);
+                un <= to_signed(un_data, 16);
+        end if;    
     end process;
     
     -- Instantiate Filter here
@@ -105,11 +106,13 @@ begin
         variable en_data    : integer;
     
     begin
+    if (reset = '0') then
         if(rising_edge(clock)) then
             en_data := to_integer(signed(enOut));
             write(v_OLINE, en_data);
             writeline(en_fp, v_OLINE);
         end if;
+    end if;
     end process;
 	
 	-- dhat
@@ -120,11 +123,13 @@ begin
         variable dhatn_data    : integer;
     
     begin
+    if (reset = '0') then
         if(rising_edge(clock)) then
             dhatn_data := to_integer(signed(dhatOut));
             write(v_OLINE, dhatn_data);
             writeline(dhatn_fp, v_OLINE);
         end if;
+    end if;
     end process;
 	
 	-- process to write the W coefficants on clock 1012
@@ -141,14 +146,14 @@ begin
 	end process;
 	
 	-- open file and write
-	process (clk_count, clock)
+	process (clock)
 		file w_fp          : text open write_mode is "C:\vivado_DSP\adaptiveFIR\data\w_int.txt";
         variable v_OLINE   : line;
         variable w_data    : integer;
         variable k         : integer := 0;
 	begin
 		if(rising_edge(clock)) then 
-			if (clk_count = 1012) then
+			if (clk_count = 1013) then
 				while(k < 12) loop
 					w_data := to_integer(signed(wn(k)));
 					write(v_OLINE, w_data);

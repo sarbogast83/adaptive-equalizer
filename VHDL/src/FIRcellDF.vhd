@@ -16,7 +16,7 @@ end FIRcellDF;
 
 architecture rtl of FIRcellDF is
 
-signal mk : signed(31 downto 0);
+signal mk : signed(31 downto 0):= (others => '0');
 
 component dff16 is 
 port(

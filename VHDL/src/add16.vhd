@@ -17,7 +17,7 @@ end add16;
 architecture Behavioral of add16 is
 
 begin
-    
-c <= a + b;
+ 
+    c <= a + b;
 
 end Behavioral;

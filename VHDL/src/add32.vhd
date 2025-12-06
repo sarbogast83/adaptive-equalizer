@@ -17,7 +17,7 @@ end add32;
 architecture Behavioral of add32 is
 
 begin
-    
-c <= a + b;
+ 
+    c <= a + b;
 
 end Behavioral;
